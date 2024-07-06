@@ -1,12 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager
-from . import User
-
-db = SQLAlchemy()
-bcrypt = Bcrypt()
-login_manager = LoginManager()
+from extensions import db, bcrypt, login_manager
 
 @login_manager.user_loader
 def load_user(user_id):
+    from modelClasses.User import User
     return User.query.get(int(user_id))
