@@ -55,5 +55,26 @@ def login():
     return render_template('login.html', form=form)
 
 
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(_email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+    
+
 if __name__ == '__main__':
     app.run(debug=True)
