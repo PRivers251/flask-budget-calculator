@@ -27,6 +27,33 @@ def create_tables():
 def home():
     return render_template('index.html')
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    
+    form = LoginForm()
+    
+    if form.validate_on_submit():
+        print("Form validated") #Debug Statement!!!!!
+        user = User.query.filter_by(_email=form.email.data).first()
+        print(f"User found: {user}") #Debug Statement!!!!!
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            print('Login successful') #Debug Statement!!!!!
+            return redirect(next_page) if next_page else redirect(url_for('dashboard'))
+        else:
+            print('Login unsuccessful') #Debug Statement!!!!!
+            flash('Login unsuccessful. Please check email and password', 'danger')
+    else:
+        print("Form not validated")  #Debug Statement!!!!!      
+    return render_template('login.html', form=form)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
