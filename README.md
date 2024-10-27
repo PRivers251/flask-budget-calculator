@@ -1,4 +1,4 @@
-<h1>Weekly Budget Calculator</h1>
+<h1>Weekly Budget Calculator - In Progress</h1>
 
 <p>Simple web application initialized in order to practice creating APIs and creating user authentication with Flask and NextJS. </p>
 
